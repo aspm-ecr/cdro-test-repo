@@ -15,19 +15,19 @@ on:
 jobs:
   job1:
     if: ${{ fromJSON(inputs.manifest)['prod-python-hello-world']['python-hello-world-docker'].deploy }}
-    uses: insights-test-prod/prod-python-hello-world/.cloudbees/workflows/deploy.yaml
+    uses: test-cdro-prod/prod-python-hello-world/.cloudbees/workflows/deploy.yaml
     with:
       artifact-id: ${{ fromJSON(inputs.manifest)['prod-python-hello-world']['python-hello-world-docker'].id }}
       environment: ${{ inputs.environment }}
   job2:
     if: ${{ fromJSON(inputs.manifest)['prod-python-hello-world']['prod-python-helloworld'].deploy }}
-    uses: insights-test-prod/prod-python-hello-world/.cloudbees/workflows/deploy.yaml
+    uses: test-cdro-prod/prod-python-hello-world/.cloudbees/workflows/deploy.yaml
     with:
       artifact-id: ${{ fromJSON(inputs.manifest)['prod-python-hello-world']['prod-python-helloworld'].id }}
       environment: ${{ inputs.environment }}
   job3:
     if: ${{ fromJSON(inputs.manifest)['prod-python-hello-world']['index.docker.io/cbpautomation/python-hello-world-docker'].deploy }}
-    uses: insights-test-prod/prod-python-hello-world/.cloudbees/workflows/deploy.yaml
+    uses: test-cdro-prod/prod-python-hello-world/.cloudbees/workflows/deploy.yaml
     with:
       artifact-id: ${{ fromJSON(inputs.manifest)['prod-python-hello-world']['index.docker.io/cbpautomation/python-hello-world-docker'].id }}
       environment: ${{ inputs.environment }}
