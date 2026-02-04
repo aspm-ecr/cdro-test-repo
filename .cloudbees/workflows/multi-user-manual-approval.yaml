@@ -7,15 +7,13 @@ on:
       manifest:
         type: string
         required: true
-        description: This is a system-generated parameter and is required for use in
-          application releases. Refer to
-          https://docs.cloudbees.com/docs/cloudbees-platform/latest/applications/releases#manifest
-          for the expected format
+        description: This is a system-generated parameter and is required for use in application releases. Refer to https://docs.cloudbees.com/docs/cloudbees-platform/latest/applications/releases#manifest for the expected format
 metadata:
   stages/v1alpha1:
     - name: PROD
       jobs:
         - PROD
+        - Approval
     - name: QA
       jobs:
         - QA
@@ -28,10 +26,18 @@ jobs:
       notifyAllEligibleUsers: false
       approvers: 7b838786-7c3e-11f0-ae4f-42010a83ae57
   QA:
-    needs:
-      - PROD
+    needs: Approval
     timeout-minutes: 5
     delegates: cloudbees-io/manual-approval/custom-job.yml@v1
     with:
       disallowLaunchByUser: false
       notifyAllEligibleUsers: false
+  Approval:
+    needs:
+      - PROD
+    timeout-minutes: 4320
+    delegates: cloudbees-io/manual-approval/custom-job.yml@v1
+    with:
+      disallowLaunchByUser: false
+      notifyAllEligibleUsers: false
+      approvers: 2276905a-60d2-11ed-94e4-42010a83ae66
