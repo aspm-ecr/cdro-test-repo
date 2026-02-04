@@ -1,0 +1,14 @@
+apiVersion: automation.cloudbees.io/v1alpha1
+kind: workflow
+name: prod
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    steps:
+      - uses: cloudbees-io/register-deployed-artifact@v2
+        with:
+          labels: jfa-cb-workflow
+          artifact-id: 7364e09a-2860-4ce8-954d-1646614ffedd
+          target-environment: ecr-qa
