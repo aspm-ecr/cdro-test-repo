@@ -41,6 +41,6 @@ jobs:
       - name: test step
         uses: cloudbees-io/snyk-sast-plugin@v1
         with:
-          snyk-token: test-b805f82c-36ef-4f7d-aee5-16bfaa718f75
-          org-id: test-cloudbees-compliance-partner-development
+          snyk-token: b805f82c-36ef-4f7d-aee5-16bfaa718f75
+          org-id: cloudbees-compliance-partner-development
         kind: scan
