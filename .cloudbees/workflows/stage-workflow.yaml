@@ -14,24 +14,15 @@ metadata:
       jobs:
         - QA
         - test
-    - name: PROD
-      jobs:
-        - PROD
+        - test-3
 jobs:
-  PROD:
-    uses: test-cdro-prod/prod-python-hello-world/.cloudbees/workflows/deploy.yaml
-    with:
-      artifact-id: ${{ fromJSON(inputs.manifest)['prod-python-hello-world']['cbpautomation/python-hello-world-docker'].id }}
-      environment: PROD
-    needs: test
   QA:
     uses: test-cdro-prod/prod-python-hello-world/.cloudbees/workflows/deploy.yaml
     with:
       artifact-id: ${{ fromJSON(inputs.manifest)['prod-python-hello-world']['cbpautomation/python-hello-world-docker'].id }}
       environment: QA
   test:
-    needs:
-      - QA
+    needs: QA
     runs-on:
       - default
       - Label1
@@ -44,3 +35,15 @@ jobs:
           snyk-token: b805f82c-36ef-4f7d-aee5-16bfaa718f75
           org-id: cloudbees-compliance-partner-development
         kind: scan
+  test-3:
+    needs:
+      - test
+    runs-on: hari
+    environment: ecr-qa
+    steps:
+      - name: test-step
+        kind: build
+        uses: cloudbees-io/publish-test-results@v2
+        with:
+          test-type: PLAYWRIGHT
+          results-path: test_report.xml
