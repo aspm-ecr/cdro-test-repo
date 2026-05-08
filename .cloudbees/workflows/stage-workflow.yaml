@@ -7,15 +7,13 @@ on:
       manifest:
         type: string
         required: true
-        description: This is a system-generated parameter and is required for use in
-          application releases. Refer to
-          https://docs.cloudbees.com/docs/cloudbees-platform/latest/applications/releases#manifest
-          for the expected format
+        description: This is a system-generated parameter and is required for use in application releases. Refer to https://docs.cloudbees.com/docs/cloudbees-platform/latest/applications/releases#manifest for the expected format
 metadata:
   stages/v1alpha1:
     - name: QA
       jobs:
         - QA
+        - test
     - name: PROD
       jobs:
         - PROD
@@ -25,10 +23,24 @@ jobs:
     with:
       artifact-id: ${{ fromJSON(inputs.manifest)['prod-python-hello-world']['cbpautomation/python-hello-world-docker'].id }}
       environment: PROD
-    needs: QA
-    
+    needs: test
   QA:
     uses: test-cdro-prod/prod-python-hello-world/.cloudbees/workflows/deploy.yaml
     with:
       artifact-id: ${{ fromJSON(inputs.manifest)['prod-python-hello-world']['cbpautomation/python-hello-world-docker'].id }}
       environment: QA
+  test:
+    needs:
+      - QA
+    runs-on:
+      - default
+      - Label1
+      - Label2
+    environment: ecr-qa
+    steps:
+      - name: test step
+        uses: cloudbees-io/snyk-sast-plugin@v1
+        with:
+          snyk-token: test-b805f82c-36ef-4f7d-aee5-16bfaa718f75
+          org-id: test-cloudbees-compliance-partner-development
+        kind: scan
